@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const route=require("./routes/patientRoutes");
@@ -6,10 +7,12 @@ const connectDB=require("./config/db")
 
 const app = express();
 connectDB()
+app.use(express.json())
 app.use("/uploads", express.static("uploads"));
 app.use("/api/patients", route);
 app.use("/api/products", require("./routes/productRoutes"));
-app.use(express.json())
+app.use("/api/auth", require("./routes/authRoutes"));
+
 app.get("/", (req, res) => {
   res.send("Server is working");
 });

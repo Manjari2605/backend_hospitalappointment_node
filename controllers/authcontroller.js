@@ -1,9 +1,11 @@
-const User = require('../models/Auth')
+const User = require('../models/auth')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 exports.register = async(req,res)=>{
 try{
+        console.log("BODY:", req.body);
+
 
     const extistinguser = await User.findOne({
         email:req.body.email
@@ -22,12 +24,16 @@ const hashpswrd = await  bcrypt.hash(req.body.password,10)
     })
 
     res.status(201).json({
-    message: "register done......",
+    message: "registration successful",
     user
  })
 
 }catch(err){
+    console.log(err);
 
+    res.status(500).json({
+        message: err.message
+    });
 }
 }
 
@@ -59,14 +65,14 @@ return res.status(400).json({
         {
             id:user._id
         },
-        "mykeypswrd",
+         process.env.JWT_SECRET,
         {
             expiresIn: "7d"
         }
     )
 
     res.json({
-         message: "login done...",
+         message: "login successful",
         token
     })
 
@@ -74,6 +80,10 @@ return res.status(400).json({
 
 
 }catch(err){
+    console.log(err);
 
+    res.status(500).json({
+        message: err.message
+    });
 }
 }
